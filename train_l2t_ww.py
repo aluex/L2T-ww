@@ -123,7 +123,7 @@ class LossWeightNetwork(nn.ModuleList):
         return outputs
 
 
-def main(mimicLoader=None, arguments=None):
+def main(mimicLoader=None, arguments=None, given_dev=None):
 
     parser = argparse.ArgumentParser(add_help=False)
     
@@ -163,7 +163,11 @@ def main(mimicLoader=None, arguments=None):
     # default settings
     
     opt = parser.parse_args(arguments) # parse from arguments
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if given_dev:
+        device = given_dev
+    else:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
     os.makedirs(opt.experiment, exist_ok=True)
     set_logging_config(opt.experiment)
     logger = logging.getLogger('main')
