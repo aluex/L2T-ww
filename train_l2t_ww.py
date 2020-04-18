@@ -164,7 +164,7 @@ def main(mimicLoader=None, arguments=None):
     
     opt = parser.parse_args(arguments) # parse from arguments
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    os.makedirs(opt.experiment)
+    os.makedirs(opt.experiment, exist_ok=True)
     set_logging_config(opt.experiment)
     logger = logging.getLogger('main')
     logger.info(' '.join(os.sys.argv))
