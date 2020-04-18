@@ -123,7 +123,8 @@ class LossWeightNetwork(nn.ModuleList):
         return outputs
 
 
-def main():
+def main(mimicLoader=None, arguments=None):
+
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--dataroot', required=True, help='Path to the dataset')
     parser.add_argument('--dataset', default='cub200')
@@ -158,7 +159,8 @@ def main():
     parser.add_argument('--experiment', default='logs', help='Where to store models')
 
     # default settings
-    opt = parser.parse_args()
+    
+    opt = parser.parse_args(arguments) # parse from arguments
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     os.makedirs(opt.experiment)
     set_logging_config(opt.experiment)
@@ -207,8 +209,12 @@ def main():
         source_optimizer = optim.Adam(weight_params, lr=opt.meta_lr, weight_decay=opt.meta_wd)
 
     # load dataloaders
-    loaders = check_dataset(opt)
-
+    # loaders = check_dataset(opt)
+    if mimicLoader:
+        loaders = mimicLoader
+    else:
+        loaders = check_dataset(opt)
+        
     # load target model
     opt.model = opt.target_model
     target_model = check_model(opt).to(device)

@@ -25,7 +25,6 @@ class FolderSubset(data.Dataset):
     def __len__(self):
         return len(self.indices)
 
-
 def check_split(opt):
     splits = []
     for split in ['train', 'val', 'test']:
