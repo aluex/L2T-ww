@@ -126,6 +126,7 @@ class LossWeightNetwork(nn.ModuleList):
 def main(mimicLoader=None, arguments=None):
 
     parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--num_classes', default=4)
     parser.add_argument('--dataroot', required=True, help='Path to the dataset')
     parser.add_argument('--dataset', default='cub200')
     parser.add_argument('--datasplit', default='cub200')
@@ -214,7 +215,7 @@ def main(mimicLoader=None, arguments=None):
         loaders = mimicLoader
     else:
         loaders = check_dataset(opt)
-        
+
     # load target model
     opt.model = opt.target_model
     target_model = check_model(opt).to(device)
