@@ -277,7 +277,7 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
         matching_loss = target_branch(source_features,
                                       target_features,
                                       weights, beta, loss_weights)
-
+        logger.info('y_pred={}, y={}'.format(y_pred.data, y))
         state['accuracy'] = accuracy(y_pred.data, y, topk=(1,))[0].item()
 
         if matching_only:
