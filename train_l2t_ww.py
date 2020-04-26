@@ -12,6 +12,8 @@ from check_model import check_model
 from utils.utils import AverageMeter, accuracy, set_logging_config
 from train.meta_optimizers import MetaSGD
 
+torch.manual_seed(499)
+
 torch.backends.cudnn.benchmark = True
 
 
