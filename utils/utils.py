@@ -31,12 +31,12 @@ def accuracy(output, target, topk=(1,)):
     batch_size = target.size(0)
 
     _, pred = output.topk(maxk, 1, True, True)
-    logger = logging.getLogger('accuracy')
-    logger.info('pred={}'.format(pred))
+    #logger = logging.getLogger('accuracy')
+    #logger.info('pred={}'.format(pred))
 
     pred = pred.t()
     correct = pred.eq(target.view(1, -1).expand_as(pred))
-    logger.info('correct={}'.format(correct))
+    #logger.info('correct={}'.format(correct))
 
     res = []
     for k in topk:
