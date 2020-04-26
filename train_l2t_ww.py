@@ -326,6 +326,7 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
             outer_objective(data).backward()
             target_optimizer.meta_backward()
             source_optimizer.step()
+            torch.cuda.empty_cache()
 
         acc = (validate(target_model, loaders[1]),
                validate(target_model, loaders[2]))
