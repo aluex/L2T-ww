@@ -334,7 +334,7 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
         if state['best'][0] < acc[0]:
             state['best'] = acc
 
-        if state['epoch'] % 10 == 0:
+        if True:# state['epoch'] % 10 == 0:
             torch.save(state, os.path.join(opt.experiment, 'ckpt-{}.pth'.format(state['epoch']+1)))
 
         logger.info('[Epoch {}] [val {:.4f}] [test {:.4f}] [best {:.4f}]'.format(epoch, acc[0], acc[1], state['best'][1]))
