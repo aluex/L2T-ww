@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import os
 import logging
-
+logger = logging.getLogger('main')
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -31,11 +31,11 @@ def accuracy(output, target, topk=(1,)):
     batch_size = target.size(0)
 
     _, pred = output.topk(maxk, 1, True, True)
-    print(pred)
+    logger.info('pred={}'.format(pred))
 
     pred = pred.t()
     correct = pred.eq(target.view(1, -1).expand_as(pred))
-    print(correct)
+    logger.info('correct={}'.format(correct))
 
     res = []
     for k in topk:
