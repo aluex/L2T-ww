@@ -300,8 +300,6 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
     # source generator training
     state['iter'] = 0
     for epoch in range(opt.epochs):
-        if opt.schedule:
-            scheduler.step()
 
         state['epoch'] = epoch
         target_model.train()
@@ -329,6 +327,12 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
             target_optimizer.meta_backward()
             source_optimizer.step()
             torch.cuda.empty_cache()
+        
+        if True:# state['epoch'] % 10 == 0:
+            torch.save(state, os.path.join(opt.experiment, 'ckpt-{}.pth'.format(state['epoch']+1)))
+        
+        if opt.schedule:
+            scheduler.step()
 
         acc = (validate(target_model, loaders[1]),
                validate(target_model, loaders[2]))
@@ -336,8 +340,7 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
         if state['best'][0] < acc[0]:
             state['best'] = acc
 
-        if True:# state['epoch'] % 10 == 0:
-            torch.save(state, os.path.join(opt.experiment, 'ckpt-{}.pth'.format(state['epoch']+1)))
+        
 
         logger.info('[Epoch {}] [val {:.4f}] [test {:.4f}] [best {:.4f}]'.format(epoch, acc[0], acc[1], state['best'][1]))
 
