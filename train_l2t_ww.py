@@ -16,6 +16,12 @@ torch.manual_seed(499)
 
 torch.backends.cudnn.benchmark = True
 
+import code
+import signal
+signal.signal(
+        vars(signal).get("SIGBREAK") or vars(signal).get("SIGUSR2"),
+        lambda sig, frame: code.interact()
+        )
 
 def _get_num_features(model):
     if model.startswith('resnet'):
