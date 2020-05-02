@@ -15,12 +15,12 @@ from train.meta_optimizers import MetaSGD
 torch.manual_seed(499)
 
 torch.backends.cudnn.benchmark = True
-
+from IPython import embed
 import code
 import signal
 signal.signal(
         vars(signal).get("SIGBREAK") or vars(signal).get("SIGUSR2"),
-        lambda sig, frame: code.interact()
+        lambda sig, frame: embed()
         )
 
 def _get_num_features(model):
@@ -260,7 +260,9 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
     def validate(model, loader):
         acc = AverageMeter()
         model.eval()
+        logger.info('validating with {} samples'.format(len(loader)))
         for x, y in loader:
+
             x, y = x.to(device), y.to(device)
             y_pred, _ = model(x)
             acc.update(accuracy(y_pred.data, y, topk=(1,))[0].item(), x.size(0))
@@ -332,7 +334,12 @@ def main(mimicLoader=None, arguments=None, given_dev=None):
             outer_objective(data).backward()
             target_optimizer.meta_backward()
             source_optimizer.step()
-            torch.cuda.empty_cache()
+
+            if state['iter'] % 200 == 0:
+                torch.save(state, os.path.join(opt.experiment, 'chpk-{}-{}.pth'.format(state['epoch'], state['iter'])))
+            # torch.cuda.empty_cache()
+            
+            # break
         
         if True:# state['epoch'] % 10 == 0:
             torch.save(state, os.path.join(opt.experiment, 'ckpt-{}.pth'.format(state['epoch']+1)))
