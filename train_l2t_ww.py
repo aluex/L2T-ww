@@ -130,6 +130,40 @@ class LossWeightNetwork(nn.ModuleList):
                     outputs.append(F.relu6(self[i](f)))
         return outputs
 
+from sklearn.metrics import roc_auc_score
+
+def eval_model(val_dataset, model, batch_size = 1024):
+    """
+    This function should look very familiar from last week -- it merely runs over
+    the provided dataset and computes the overall performance of the model.
+    """
+    
+    val_dataloader = DataLoader(
+        val_dataset, batch_size=batch_size, shuffle=False, num_workers=16
+    )
+    num_val_batches = len(val_dataloader)
+
+    model.eval()
+    val_batches = tqdm(
+        val_dataloader, total=num_val_batches, leave=False, desc="Val Batch"
+    )
+    val_probs, val_probs_flat = [], []
+    val_labels, val_labels_flat = [], []
+    val_loss = 0
+    for batch in val_batches:
+        with torch.no_grad():
+            _, probs, loss = model(*batch)
+            val_loss += loss.detach().cpu().numpy()
+            probs = list(probs.detach().cpu().numpy())
+            labels = list(batch[-1].detach().cpu().numpy())
+        val_probs.extend(probs)
+        val_labels.extend(labels)
+
+    val_loss /= num_val_batches
+    val_auc = roc_auc_score(val_labels, val_probs)
+
+    return val_loss, val_auc, val_probs
+
 
 def main(mimicLoader=None, arguments=None, given_dev=None):
 
